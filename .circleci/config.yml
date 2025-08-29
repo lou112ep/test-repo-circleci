@@ -32,7 +32,7 @@ jobs:
           name: "Sync website files to S3"
           command: |
             # Sostituisci 'luca-circleci-test-bucket' con il nome del tuo bucket
-            aws s3 sync ./website s3://luca-circleci-test-bucket --delete
+            aws s3 sync ./site s3://luca-circleci-test-bucket --delete
 
 workflows:
   build-and-deploy:
