@@ -10,7 +10,7 @@ terraform {
     bucket         = "luca-circleci-terraform-state-backend"
     key            = "website/terraform.tfstate" # Il percorso del file di stato all'interno del bucket
     region         = "eu-west-1"                   # La stessa regione del bucket
-    dynamodb_table = "terraform-state-lock"        # Il nome della tabella per il lock
+    use_lockfile = true
   }
 }
 
