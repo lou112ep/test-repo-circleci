@@ -39,6 +39,10 @@ resource "aws_s3_bucket_public_access_block" "website" {
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
 
+  # Questa riga forza Terraform ad attendere che il blocco di accesso pubblico
+  # sia stato configurato prima di tentare di applicare la policy.
+  depends_on = [aws_s3_bucket_public_access_block.website]
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
