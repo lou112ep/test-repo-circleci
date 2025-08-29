@@ -1,0 +1,40 @@
+version: 2.1
+
+jobs:
+  deploy-infrastructure:
+    docker:
+      - image: cimg/base:2025.08
+    steps:
+      - checkout
+      - run:
+          name: "Install Terraform"
+          command: |
+            sudo apt-get update && sudo apt-get install -y wget unzip
+            wget https://releases.hashicorp.com/terraform/1.13.1/terraform_1.13.1_linux_amd64.zip
+            unzip terraform_1.13.1_linux_amd64.zip
+            sudo mv terraform /usr/local/bin/
+            terraform --version
+      - run:
+          name: "Install AWS CLI"
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
+      - run:
+          name: "Initialize Terraform"
+          command: terraform init
+      - run:
+          name: "Apply Terraform"
+          # L'opzione -auto-approve è necessaria per l'esecuzione non interattiva in CI/CD
+          command: terraform apply -auto-approve
+      - run:
+          name: "Sync website files to S3"
+          command: |
+            # Sostituisci 'luca-circleci-test-bucket' con il nome del tuo bucket
+            aws s3 sync ./website s3://luca-circleci-test-bucket --delete
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - deploy-infrastructure
