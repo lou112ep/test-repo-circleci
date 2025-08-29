@@ -5,6 +5,13 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "luca-circleci-terraform-state-backend"
+    key            = "website/terraform.tfstate" # Il percorso del file di stato all'interno del bucket
+    region         = "eu-west-1"                   # La stessa regione del bucket
+    dynamodb_table = "terraform-state-lock"        # Il nome della tabella per il lock
+  }
 }
 
 provider "aws" {
